@@ -120,8 +120,8 @@ def player_turn_do(xo):
     options = get_open_spaces()
     invalid = True
     while invalid:
-        choice = raw_input('Put your %s in any of these positions: %s '
-                       % (xo, ''.join(options))).strip()
+        choice = raw_input('Put your %s in any of these positions - %s: '
+                       % (xo, ', '.join(options))).strip()
         if choice in options:
             invalid = False
         else:
@@ -142,7 +142,7 @@ def computer_turn(xo):
     turn_score = minimax(curr_board, computer, player)
     choice = computer_choice
     curr_board[int(choice)-1] = computer
-    print 'The computer placed an %s at %s' % (computer, choice)
+    print 'The computer placed an %s at cell %s' % (computer, choice)
     return check_winner()
 
 
@@ -154,7 +154,7 @@ def player_turn(xo):
     """
     print_board()
     choice = player_turn_do(xo)
-    print 'You placed an %s at %s' % (player, choice)
+    print 'You placed an %s at cell %s' % (player, choice)
     return check_winner()
 
 
@@ -190,4 +190,4 @@ while not draw():
             print '\nWinner: %s\nCells: %s' % s
             break
 else:
-    print '\nA draw'
+    print '\nYou tied. Better than losing...'
