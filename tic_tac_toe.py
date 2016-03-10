@@ -6,77 +6,81 @@ win_indices = ((0,1,2), (3,4,5), (6,7,8),
         (0,4,8), (2,4,6))
 
 def print_board():
-    print('\n-+-+-\n'.join('|'.join(curr_board[x:x+3]) for x in (0,3,6)))
+    print '\n'
+    print '\n-+-+-\n'.join('|'.join(curr_board[x:x+3]) for x in (0,3,6))
+    print '\n'
 
-def score():
+def check_winner():
     for win in win_indices:
         b = curr_board[win[0]]
         if b in 'XO' and all (curr_board[i] == b for i in win):
             return b, [i+1 for i in win]
     return None, None
 
-def finished():
+def draw():
     return all (b in 'XO' for b in curr_board)
 
-def space():
+def get_open_spaces():
     return [b for b in curr_board if b not in 'XO']
 
-def my_turn(xo):
+def computer_turn_do(xo):
     """
     Performs a random move.
     Replace this with minimax AI decision.
     """
-    options = space()
+    options = get_open_spaces()
     choice = random.choice(options)
     curr_board[int(choice)-1] = xo
     return choice
 
-def your_turn(xo):
-    options = space()
+def player_turn_do(xo):
+    options = get_open_spaces()
     invalid = True
     while invalid:
-        choice = input(" Put your %s in any of these positions: %s "
+        choice = raw_input('Put your %s in any of these positions: %s '
                        % (xo, ''.join(options))).strip()
         if choice in options:
             invalid = False
         else:
-            print("Whoops I don't understand the input")
+            print 'Invalid choice! Try again.'
     curr_board[int(choice)-1] = xo
     return choice
 
-def me(xo):
+def computer_turn(xo):
     print_board()
-    print('I go at', my_turn(xo))
-    return score()
+    choice = computer_turn_do(xo)
+    print 'The computer placed an %s at %s' % (computer, choice)
+    return check_winner()
 
-def you(xo):
+
+def player_turn(xo):
     print_board()
-    print('You went at', your_turn(xo))
-    return score()
-
+    choice = player_turn_do(xo)
+    print 'You placed an %s at %s' % (player, choice)
+    return check_winner()
 
 
 invalid_letter = True
 while invalid_letter:
-    player = input("Would you like to play as X or O? ").strip()
+    player = raw_input('Would you like to play as X or O? ').strip()
     if player in 'XO':
         invalid_letter = False
     else:
-        print "Invalid letter."
+        print 'Invalid letter.'
 if player == 'O':
     computer = 'X'
 else:
     computer = 'O'
 
 
-while not finished():
-    s = me()
+while not draw():
+    s = computer_turn(computer)
     if s[0]:
         print_board()
         print "\n%s wins across %s" % s
         break
-    if not finished():
-        s = you('O')
+    if not draw():
+        s = player_turn(player)
         if s[0]:
             print_board()
             print "\n%s wins across %s" % s
